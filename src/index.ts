@@ -2,7 +2,6 @@
 import express from "express";
 import "reflect-metadata";
 import { Connection, createConnection } from "typeorm";
-import { seedFeedback } from "./data/seed";
 import { Feedback } from "./entity/Feedback";
 import { User } from "./entity/User";
 
