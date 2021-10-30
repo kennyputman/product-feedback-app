@@ -1,15 +1,23 @@
 import express from "express";
+import "reflect-metadata";
+import { Connection, createConnection } from "typeorm";
 import data from "./data.json";
 
-const PORT = 3001;
-const app = express();
+const main = async () => {
+  const PORT = 3001;
 
-app.use(express.json());
+  const connection: Connection = await createConnection();
+  const app = express();
 
-app.get("/all", (reqeust, response) => {
-  response.send(data);
-});
+  app.use(express.json());
 
-app.listen(PORT, () => {
-  console.log(`Server running on port: ${PORT}`);
-});
+  app.get("/all", (reqeust, response) => {
+    response.send(data);
+  });
+
+  app.listen(PORT, () => {
+    console.log(`Server running on port: ${PORT}`);
+  });
+};
+
+main();
