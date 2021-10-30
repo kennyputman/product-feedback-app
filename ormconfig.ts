@@ -9,6 +9,7 @@ export default {
   username: "postgres",
   password: process.env.TYPEORM_PASSWORD,
   database: "poduct_feedback_app",
+  entities: ["./src/entity/*.ts"],
   loggin: true,
   synchronize: true,
 };
