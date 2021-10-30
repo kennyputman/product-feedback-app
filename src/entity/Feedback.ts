@@ -4,9 +4,11 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from "typeorm";
 
 import { Category, Status } from "../types/models";
+import { User } from "./User";
 
 @Entity()
 export class Feedback {
@@ -19,7 +21,7 @@ export class Feedback {
   @Column({ type: "enum", enum: Category })
   category: string;
 
-  @Column()
+  @Column({ default: 0 })
   upvotes: number;
 
   @Column({ type: "enum", enum: Status, default: Status.SUGGESTION })
@@ -33,4 +35,7 @@ export class Feedback {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @ManyToOne(() => User, (user) => user.feedbacks)
+  user: User;
 }

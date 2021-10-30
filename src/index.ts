@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import express from "express";
 import "reflect-metadata";
 import { Connection, createConnection } from "typeorm";
+import { seedFeedback } from "./data/seed";
+import { Feedback } from "./entity/Feedback";
 import { User } from "./entity/User";
-// import data from "./data.json";
 
 const PORT = 3001;
 
@@ -12,20 +14,20 @@ const main = async () => {
   const app = express();
   app.use(express.json());
 
+  // must manually drop tables before running
+  // await seedFeedback(connection);
+
   const userRepo = connection.getRepository(User);
+  const feedbackRepo = connection.getRepository(Feedback);
 
-  // userRepo.clear();
-  // const user = new User();
-  // user.firstName = "Suzanne";
-  // user.lastName = "Chang";
-  // user.username = "upbeat1811";
-  // user.image = "./assets/user-images/image-suzanne.jpg";
-  // await userRepo.save(user);
-
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   app.get("/users", async (_request, response) => {
     const allUsers = await userRepo.find();
-    response.send(allUsers);
+    return response.send(allUsers);
+  });
+
+  app.get("/feedback", async (_request, response) => {
+    const feedback = await feedbackRepo.find({ relations: ["user"] });
+    return response.send(feedback);
   });
 
   app.listen(PORT, () => {
@@ -33,5 +35,4 @@ const main = async () => {
   });
 };
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-main();
+void main();
