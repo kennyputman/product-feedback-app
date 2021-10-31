@@ -19,12 +19,12 @@ const main = async () => {
   const userRepo = connection.getRepository(User);
   const feedbackRepo = connection.getRepository(Feedback);
 
-  app.get("/users", async (_request, response) => {
+  app.get("/users", async (_, response) => {
     const allUsers = await userRepo.find();
     return response.send(allUsers);
   });
 
-  app.get("/feedback", async (_request, response) => {
+  app.get("/feedback", async (_, response) => {
     const feedback = await feedbackRepo.find({ relations: ["user"] });
     return response.send(feedback);
   });
