@@ -7,7 +7,7 @@ import {
   ManyToOne,
 } from "typeorm";
 
-import { Category, Status } from "../types/models";
+import { Category, Status } from "../types/types";
 import { User } from "./User";
 
 @Entity()

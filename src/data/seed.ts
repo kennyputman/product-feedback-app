@@ -1,5 +1,5 @@
 import { Connection } from "typeorm";
-import { Category } from "../types/models";
+import { Category } from "../types/types";
 import { Feedback } from "../entity/Feedback";
 import { User } from "../entity/User";
 

@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
+import { ApolloServer } from "apollo-server-express";
 import express from "express";
 import "reflect-metadata";
-import { Connection, createConnection } from "typeorm";
-import { Feedback } from "./entity/Feedback";
-import { User } from "./entity/User";
+import { createConnection } from "typeorm";
+import { buildSchema } from "type-graphql";
+import { UserResolver } from "./resolvers/UserResolver";
 
 const PORT = 3001;
 
 const main = async () => {
-  const connection: Connection = await createConnection();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const connection = await createConnection();
 
   const app = express();
   app.use(express.json());
@@ -16,18 +18,15 @@ const main = async () => {
   // must manually drop tables before running
   // await seedFeedback(connection);
 
-  const userRepo = connection.getRepository(User);
-  const feedbackRepo = connection.getRepository(Feedback);
-
-  app.get("/users", async (_, response) => {
-    const allUsers = await userRepo.find();
-    return response.send(allUsers);
+  const apolloServer = new ApolloServer({
+    schema: await buildSchema({
+      resolvers: [UserResolver],
+      validate: false,
+    }),
   });
 
-  app.get("/feedback", async (_, response) => {
-    const feedback = await feedbackRepo.find({ relations: ["user"] });
-    return response.send(feedback);
-  });
+  await apolloServer.start();
+  apolloServer.applyMiddleware({ app });
 
   app.listen(PORT, () => {
     console.log(`app listening on PORT: ${PORT}`);
