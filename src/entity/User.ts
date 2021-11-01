@@ -33,7 +33,7 @@ export class User extends BaseEntity {
   image: string;
 
   // @Field(() => [Comment])
-  @OneToMany(() => Comment, (comment) => comment.user)
+  @OneToMany(() => Comment, (comment) => comment.user, { cascade: true })
   comments: Comment[];
 
   // @Field(() => [Feedback])
