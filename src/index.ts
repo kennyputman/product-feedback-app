@@ -5,6 +5,8 @@ import "reflect-metadata";
 import { createConnection } from "typeorm";
 import { buildSchema } from "type-graphql";
 import { UserResolver } from "./resolvers/UserResolver";
+import { CommentResolver } from "./resolvers/CommentResolver";
+import { FeedbackResolver } from "./resolvers/FeedbackResolver";
 
 const PORT = 3001;
 
@@ -20,7 +22,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver],
+      resolvers: [UserResolver, CommentResolver, FeedbackResolver],
       validate: false,
     }),
   });
