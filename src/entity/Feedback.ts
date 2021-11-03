@@ -5,13 +5,14 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  BaseEntity,
 } from "typeorm";
 
 import { Category, Status } from "../types/types";
 import { User } from "./User";
 
 @Entity()
-export class Feedback {
+export class Feedback extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
