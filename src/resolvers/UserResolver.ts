@@ -1,4 +1,5 @@
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, ID, Mutation, Query, Resolver } from "type-graphql";
+import { DeleteResult } from "typeorm";
 import { User } from "../entity/User";
 
 @Resolver()
@@ -30,5 +31,18 @@ export class UserResolver {
 
     const createdUser = await User.create(newUser).save();
     return createdUser;
+  }
+
+  @Mutation(() => Boolean)
+  async deleteUser(@Arg("id") userId: string): Promise<boolean> {
+    const deleteResult = await User.createQueryBuilder()
+      .delete()
+      .from(User)
+      .where("id = :id", { id: userId })
+      .execute();
+    if (deleteResult.affected === 0) {
+      return false;
+    }
+    return true;
   }
 }
