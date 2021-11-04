@@ -5,6 +5,8 @@ import {
   Column,
   OneToMany,
   BaseEntity,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Comment } from "./Comment";
 import { Feedback } from "./Feedback";
@@ -17,6 +19,13 @@ export class User extends BaseEntity {
   id: number;
 
   @Field()
+  @Column({ unique: true })
+  username: string;
+
+  @Column()
+  password: string;
+
+  @Field()
   @Column()
   firstName: string;
 
@@ -24,13 +33,17 @@ export class User extends BaseEntity {
   @Column()
   lastName: string;
 
-  @Field()
-  @Column({ unique: true })
-  username: string;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   image: string;
+
+  @Field(() => String)
+  @CreateDateColumn()
+  created_at: Date;
+
+  @Field(() => String)
+  @UpdateDateColumn()
+  updated_at: Date;
 
   // @Field(() => [Comment])
   @OneToMany(() => Comment, (comment) => comment.user, { cascade: true })

@@ -1,6 +1,6 @@
-import { Arg, ID, Mutation, Query, Resolver } from "type-graphql";
-import { DeleteResult } from "typeorm";
+import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { User } from "../entity/User";
+import * as bcrypt from "bcrypt";
 
 @Resolver()
 export class UserResolver {
@@ -16,17 +16,21 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  async createUser(
+  async registerUser(
+    @Arg("username") username: string,
+    @Arg("password") password: string,
     @Arg("firstName") firstName: string,
     @Arg("lastName") lastName: string,
-    @Arg("username") username: string,
     @Arg("image", { nullable: true }) image: string
   ): Promise<User> {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = {
       firstName,
       lastName,
       username,
       image,
+      password: hashedPassword,
     };
 
     const createdUser = await User.create(newUser).save();

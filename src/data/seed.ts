@@ -7,6 +7,7 @@ const seedUsers = async (connection: Connection) => {
   const userRepo = connection.getRepository(User);
 
   const user1 = new User();
+  user1.password = "Salasana";
   user1.firstName = "Victoria";
   user1.lastName = "Meijia";
   user1.username = "arlen_the_marlin";
@@ -14,6 +15,7 @@ const seedUsers = async (connection: Connection) => {
   await userRepo.save(user1);
 
   const user2 = new User();
+  user2.password = "Salasana";
   user2.firstName = "Jackson";
   user2.lastName = "Barker";
   user2.username = "countryspirit";
@@ -21,6 +23,7 @@ const seedUsers = async (connection: Connection) => {
   await userRepo.save(user2);
 
   const user3 = new User();
+  user3.password = "Salasana";
   user3.firstName = "Zena";
   user3.lastName = "Kelley";
   user3.username = "velvetround";
