@@ -1,31 +1,7 @@
-import {
-  Arg,
-  Field,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-} from "type-graphql";
+import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { User } from "../entity/User";
 import * as bcrypt from "bcrypt";
-
-@ObjectType()
-class FieldError {
-  @Field({ nullable: true })
-  field: string;
-
-  @Field({ nullable: true })
-  message: string;
-}
-
-@ObjectType()
-class UserResponse {
-  @Field(() => [FieldError], { nullable: true })
-  errors?: FieldError[];
-
-  @Field(() => User, { nullable: true })
-  user?: User;
-}
+import { UserResponse } from "../types/responseTypes";
 
 @Resolver()
 export class UserResolver {
@@ -41,15 +17,27 @@ export class UserResolver {
   }
 
   // *** check if input type is better for args
-  @Mutation(() => User)
+  @Mutation(() => UserResponse)
   async registerUser(
     @Arg("username") username: string,
     @Arg("password") password: string,
     @Arg("firstName") firstName: string,
     @Arg("lastName") lastName: string,
     @Arg("image", { nullable: true }) image: string
-  ): Promise<User> {
-    // *** Update to user response
+  ): Promise<UserResponse> {
+    const user = await User.findOne({ where: { username: username } });
+
+    if (user !== undefined) {
+      return {
+        errors: [
+          {
+            field: "username",
+            message: "username is already taken",
+          },
+        ],
+      };
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = {
@@ -61,7 +49,7 @@ export class UserResolver {
     };
 
     const createdUser = await User.create(newUser).save();
-    return createdUser;
+    return { user: createdUser, errors: [] };
   }
 
   @Mutation(() => UserResponse)
