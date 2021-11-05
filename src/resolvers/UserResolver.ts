@@ -22,8 +22,7 @@ export class UserResolver {
     @Arg("username") username: string,
     @Arg("password") password: string,
     @Arg("firstName") firstName: string,
-    @Arg("lastName") lastName: string,
-    @Arg("image", { nullable: true }) image: string
+    @Arg("lastName") lastName: string
   ): Promise<UserResponse> {
     const user = await User.findOne({ where: { username: username } });
 
@@ -38,18 +37,19 @@ export class UserResolver {
       };
     }
 
+    // Add validatior for username and password
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = {
       firstName,
       lastName,
       username,
-      image,
       password: hashedPassword,
     };
 
     const createdUser = await User.create(newUser).save();
-    return { user: createdUser, errors: [] };
+    return { user: createdUser };
   }
 
   @Mutation(() => UserResponse)
@@ -58,7 +58,6 @@ export class UserResolver {
     @Arg("password") password: string
   ): Promise<UserResponse> {
     const user = await User.findOne({ where: { username: username } });
-
     if (user === undefined) {
       return {
         errors: [
@@ -68,14 +67,13 @@ export class UserResolver {
     }
 
     const valid = await bcrypt.compare(password, user.password);
-
     if (!valid) {
       return {
         errors: [{ field: "password", message: "Incorrect Password" }],
       };
     }
 
-    return { user: user, errors: [] };
+    return { user };
   }
 
   @Mutation(() => Boolean)

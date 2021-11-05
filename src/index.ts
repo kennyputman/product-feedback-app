@@ -7,6 +7,7 @@ import { buildSchema } from "type-graphql";
 import { UserResolver } from "./resolvers/UserResolver";
 import { CommentResolver } from "./resolvers/CommentResolver";
 import { FeedbackResolver } from "./resolvers/FeedbackResolver";
+// import { seedFeedback } from "./data/seed";
 
 const PORT = 3001;
 
