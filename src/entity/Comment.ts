@@ -8,6 +8,7 @@ import {
   ManyToOne,
   BaseEntity,
 } from "typeorm";
+import { Feedback } from "./Feedback";
 import { User } from "./User";
 
 @ObjectType()
@@ -31,4 +32,7 @@ export class Comment extends BaseEntity {
 
   @ManyToOne(() => User, (user) => user.comments)
   user: User;
+
+  @ManyToOne(() => Feedback, (feedback) => feedback.comments)
+  feedback: Feedback;
 }

@@ -7,9 +7,11 @@ import {
   UpdateDateColumn,
   ManyToOne,
   BaseEntity,
+  OneToMany,
 } from "typeorm";
 
 import { Category, Status } from "../types/types";
+import { Comment } from "./Comment";
 import { User } from "./User";
 
 registerEnumType(Category, {
@@ -57,4 +59,13 @@ export class Feedback extends BaseEntity {
 
   @ManyToOne(() => User, (user) => user.feedbacks)
   user: User;
+
+  @OneToMany(() => Comment, (comment) => comment.user, { cascade: true })
+  comments: Comment[];
+
+  static getFeedbackById(feedbackId: string) {
+    return this.createQueryBuilder("feedback")
+      .where("feedback.id = :id", { id: feedbackId })
+      .getOne();
+  }
 }
