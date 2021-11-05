@@ -60,7 +60,7 @@ export class Feedback extends BaseEntity {
   @ManyToOne(() => User, (user) => user.feedbacks)
   user: User;
 
-  @OneToMany(() => Comment, (comment) => comment.user, { cascade: true })
+  @OneToMany(() => Comment, (comment) => comment.feedback, { cascade: true })
   comments: Comment[];
 
   static getFeedbackById(feedbackId: string) {

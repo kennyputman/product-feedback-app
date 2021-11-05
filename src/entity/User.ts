@@ -50,7 +50,7 @@ export class User extends BaseEntity {
   comments: Comment[];
 
   // @Field(() => [Feedback])
-  @OneToMany(() => Comment, (feedback) => feedback.user)
+  @OneToMany(() => Comment, (feedback) => feedback.user, { cascade: true })
   feedbacks: Feedback[];
 
   static getUserById(userId: string) {
