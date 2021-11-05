@@ -23,11 +23,11 @@ export class Comment extends BaseEntity {
 
   @Field(() => String)
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   @Field(() => String)
   @UpdateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
 
   @ManyToOne(() => User, (user) => user.comments)
   user: User;

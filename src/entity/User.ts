@@ -39,11 +39,11 @@ export class User extends BaseEntity {
 
   @Field(() => String)
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   @Field(() => String)
   @UpdateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
 
   // @Field(() => [Comment])
   @OneToMany(() => Comment, (comment) => comment.user, { cascade: true })
