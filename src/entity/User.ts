@@ -52,4 +52,10 @@ export class User extends BaseEntity {
   // @Field(() => [Feedback])
   @OneToMany(() => Comment, (feedback) => feedback.user)
   feedbacks: Feedback[];
+
+  static getUserById(userId: string) {
+    return this.createQueryBuilder("user")
+      .where("user.id = :id", { id: userId })
+      .getOne();
+  }
 }
