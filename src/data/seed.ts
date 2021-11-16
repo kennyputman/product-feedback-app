@@ -4,39 +4,31 @@ import { Feedback } from "../entity/Feedback";
 import { User } from "../entity/User";
 import * as bcrypt from "bcrypt";
 import dotenv from "dotenv";
+import { userData } from "../data/userData";
 
 dotenv.config();
 
 const seedUsers = async (connection: Connection) => {
   const userRepo = connection.getRepository(User);
-  const password = typeof String(process.env.SEED_DB_PASSWORD);
+  const password = String(process.env.SEED_DB_PASSWORD);
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const newUsers = [
-    {
-      password: hashedPassword,
-      firstName: "Victoria",
-      lastName: "Meijia",
-      username: "arlen_the_marlin",
-    },
-    {
-      password: hashedPassword,
-      firstName: "Suzanne",
-      lastName: "Chang",
-      username: "upbeat1811",
-    },
-    {
-      password: hashedPassword,
-      firstName: "Zena",
-      lastName: "Kelly",
-      username: "velvetround",
-    },
-  ];
+  const users = userData;
 
   await Promise.all(
-    newUsers.map(async (user) => {
-      await userRepo.create(user).save();
+    users.map(async (user) => {
+      const userSplit = user.name.split(" ");
+
+      const newUser = {
+        username: user.username,
+        image: user.image,
+        firstName: userSplit[0],
+        lastName: userSplit[1],
+        password: hashedPassword,
+      };
+
+      await userRepo.create(newUser).save();
     })
   );
 };

@@ -60,3 +60,5 @@ dist
 yarn.lock
 
 assets
+
+.vscode

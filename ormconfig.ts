@@ -10,6 +10,6 @@ export default {
   password: process.env.TYPEORM_PASSWORD,
   database: "product_feedback_app",
   entities: ["./src/entity/*.ts"],
-  logging: true,
+  // logging: true,
   synchronize: true,
 };
