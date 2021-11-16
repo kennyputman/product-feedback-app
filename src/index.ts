@@ -7,6 +7,7 @@ import { buildSchema } from "type-graphql";
 import { UserResolver } from "./resolvers/UserResolver";
 import { CommentResolver } from "./resolvers/CommentResolver";
 import { FeedbackResolver } from "./resolvers/FeedbackResolver";
+// import { seedUsers } from "./data/seed";
 // import { seedFeedback } from "./data/seed";
 
 const PORT = 3001;
@@ -19,6 +20,7 @@ const main = async () => {
   app.use(express.json());
 
   // must manually drop tables before running
+  // await seedUsers(connection);
   // await seedFeedback(connection);
 
   const apolloServer = new ApolloServer({

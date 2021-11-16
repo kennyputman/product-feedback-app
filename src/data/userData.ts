@@ -1,10 +1,14 @@
 type seedUser = {
-  image: string;
+  image?: string;
   name: string;
   username: string;
 };
 
 const userData: seedUser[] = [
+  {
+    name: "feedback creator",
+    username: "feedbackcreator",
+  },
   {
     image: "./assets/user-images/image-zena.jpg",
     name: "Zena Kelley",
