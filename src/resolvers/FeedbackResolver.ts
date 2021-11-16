@@ -13,6 +13,7 @@ export class FeedbackResolver {
   @Query(() => Feedback, { nullable: true })
   async Feedback(@Arg("id") id: number) {
     const feedbackById = await Feedback.findOne(id);
+    console.log(feedbackById);
     return feedbackById;
   }
 

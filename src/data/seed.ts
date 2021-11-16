@@ -5,6 +5,7 @@ import * as bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { userData } from "../data/userData";
 import { productRequestData } from "../data/productRequestData";
+import { Comment } from "../entity/Comment";
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ const seedUsers = async (connection: Connection) => {
 const seedFeedback = async (connection: Connection) => {
   const feedbackRepo = connection.getRepository(Feedback);
   const userRepo = connection.getRepository(User);
+  const commentRepo = connection.getRepository(Comment);
 
   const user = await userRepo.findOne({
     where: { username: "feedbackcreator" },
@@ -52,7 +54,23 @@ const seedFeedback = async (connection: Connection) => {
 
       console.log(newFeedback);
 
-      await feedbackRepo.create(newFeedback).save();
+      const createdFeedback = await feedbackRepo.create(newFeedback).save();
+
+      if (feedback.comments !== undefined) {
+        feedback.comments?.map(async (comment) => {
+          const user = await User.findOne({
+            where: { username: comment.user.username },
+          });
+
+          const newComment = {
+            content: comment.content,
+            user: user,
+            feedback: createdFeedback,
+          };
+
+          await commentRepo.create(newComment).save();
+        });
+      }
     })
   );
 };
