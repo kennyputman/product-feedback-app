@@ -1,30 +1,22 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { ApolloServer } from "apollo-server-express";
 import express from "express";
-import "reflect-metadata";
+import http from "http";
+import { ApolloServer } from "apollo-server-express";
+import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
 import { createConnection, getConnection } from "typeorm";
+import "reflect-metadata";
 import { buildSchema } from "type-graphql";
+import { ApolloServerLoaderPlugin } from "type-graphql-dataloader";
 import { UserResolver } from "./resolvers/UserResolver";
 import { CommentResolver } from "./resolvers/CommentResolver";
 import { FeedbackResolver } from "./resolvers/FeedbackResolver";
-import { ApolloServerLoaderPlugin } from "type-graphql-dataloader";
 // import { seedUsers } from "./data/seed";
 // import { seedFeedback } from "./data/seed";
 
-const PORT = 3001;
-
-const main = async () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const connection = await createConnection();
-
+async function startApolloServer() {
   const app = express();
-  app.use(express.json());
-
-  // must manually drop tables before running
-  // await seedUsers(connection);
-  // await seedFeedback(connection);
-
-  const apolloServer = new ApolloServer({
+  const httpServer = http.createServer(app);
+  const server = new ApolloServer({
     schema: await buildSchema({
       resolvers: [UserResolver, CommentResolver, FeedbackResolver],
       validate: false,
@@ -33,15 +25,23 @@ const main = async () => {
       ApolloServerLoaderPlugin({
         typeormGetConnection: getConnection,
       }),
+      ApolloServerPluginDrainHttpServer({ httpServer }),
     ],
   });
 
-  await apolloServer.start();
-  apolloServer.applyMiddleware({ app });
+  // ------------ must manually drop tables before running --------------- //
+  // await seedUsers(connection);
+  // await seedFeedback(connection);
 
-  app.listen(PORT, () => {
-    console.log(`app listening on PORT: ${PORT}`);
-  });
-};
+  await createConnection();
 
-void main();
+  await server.start();
+  server.applyMiddleware({ app });
+
+  await new Promise<void>((resolve) =>
+    httpServer.listen({ port: 3001 }, resolve)
+  );
+  console.log(`🚀 Server ready at http://localhost:3001${server.graphqlPath}`);
+}
+
+void startApolloServer();
