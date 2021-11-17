@@ -2,11 +2,12 @@
 import { ApolloServer } from "apollo-server-express";
 import express from "express";
 import "reflect-metadata";
-import { createConnection } from "typeorm";
+import { createConnection, getConnection } from "typeorm";
 import { buildSchema } from "type-graphql";
 import { UserResolver } from "./resolvers/UserResolver";
 import { CommentResolver } from "./resolvers/CommentResolver";
 import { FeedbackResolver } from "./resolvers/FeedbackResolver";
+import { ApolloServerLoaderPlugin } from "type-graphql-dataloader";
 // import { seedUsers } from "./data/seed";
 // import { seedFeedback } from "./data/seed";
 
@@ -28,6 +29,11 @@ const main = async () => {
       resolvers: [UserResolver, CommentResolver, FeedbackResolver],
       validate: false,
     }),
+    plugins: [
+      ApolloServerLoaderPlugin({
+        typeormGetConnection: getConnection,
+      }),
+    ],
   });
 
   await apolloServer.start();

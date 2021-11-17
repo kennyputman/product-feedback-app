@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from "type-graphql";
+import { TypeormLoader } from "type-graphql-dataloader";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -30,9 +31,13 @@ export class Comment extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Field(() => User)
   @ManyToOne(() => User, (user) => user.comments)
+  @TypeormLoader()
   user: User;
 
+  @Field(() => Comment)
   @ManyToOne(() => Feedback, (feedback) => feedback.comments)
+  @TypeormLoader()
   feedback: Feedback;
 }

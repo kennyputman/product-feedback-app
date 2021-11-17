@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
+import { TypeormLoader } from "type-graphql-dataloader";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -60,7 +61,9 @@ export class Feedback extends BaseEntity {
   @ManyToOne(() => User, (user) => user.feedbacks)
   user: User;
 
+  @Field(() => [Comment])
   @OneToMany(() => Comment, (comment) => comment.feedback, { cascade: true })
+  @TypeormLoader()
   comments: Comment[];
 
   static getFeedbackById(feedbackId: string) {
