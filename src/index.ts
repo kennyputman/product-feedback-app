@@ -7,9 +7,7 @@ import { createConnection, getConnection } from "typeorm";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { ApolloServerLoaderPlugin } from "type-graphql-dataloader";
-import { UserResolver } from "./resolvers/UserResolver";
-import { CommentResolver } from "./resolvers/CommentResolver";
-import { FeedbackResolver } from "./resolvers/FeedbackResolver";
+import { UserResolver, CommentResolver, FeedbackResolver } from "./resolvers";
 // import { seedUsers } from "./data/seed";
 // import { seedFeedback } from "./data/seed";
 
